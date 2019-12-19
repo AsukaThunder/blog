@@ -1,16 +1,17 @@
-#¶Ë¿ÚºÅ
+#ç«¯å£å·
 server:
   port: 8088
 
-#Êı¾İÔ´
+#æ•°æ®æº
 spring:
   datasource:
-    jdbc-url: 'jdbc:mysql://localhost/blog?useUnicode=true&characterEncoding=UTF-8&useSSL=true&autoReconnect=true'
+    url: 'jdbc:mysql://localhost/blog?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8_bin&serverTimezone=Asia/Shanghai'
     username: root
     password: root
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
-  #JPAÉèÖÃ
+
+  #JPAé…ç½®
   jpa:
     show-sql: true
     open-in-view: true
@@ -32,7 +33,7 @@ logging.level:
   root: info
   org.springframework: INFO
   com.ajmd: debug
-#ÈÕÖ¾Êä³öÂ·¾¶
+#æ—¥å¿—è¾“å‡ºè·¯å¾„
 logging.path: C:/logs/blog
 
 

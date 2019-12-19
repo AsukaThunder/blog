@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName: Article
@@ -104,4 +105,27 @@ public class Article extends BaseEntity {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "status")
     private Status status;
+    /**
+     * 文章评论关系
+     */
+    @OneToMany(mappedBy = "article")
+    private List<Comments> comments;
+    /**
+     * 分类与文章关系
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "fk1_article_category"))
+    private Category category;
+    /**
+     * 作者信息
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk1_article_user"))
+    private User user;
+    /**
+     * 文章标签
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "article", orphanRemoval = true)
+    private List<ArticleTags> articleTags;
+
 }

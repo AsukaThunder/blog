@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @ClassName: Role
@@ -15,8 +16,8 @@ import javax.persistence.*;
  * @version: 1.0
  * 2019/12/18 下午 5:55
  **/
-@Setter
 @Getter
+@Setter
 @Entity
 @DynamicUpdate
 @Table(name = "role")
@@ -39,12 +40,11 @@ public class Role extends BaseEntity {
      */
     @Column(name = "name")
     private String name;
-
     /**
-     * 角色用户
+     * 关联用户角色表
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", foreignKey = @ForeignKey(name = "fk_user_role"))
-    private User user;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "role", orphanRemoval = true)
+    private List<UserRole> userRoles;
+
 
 }

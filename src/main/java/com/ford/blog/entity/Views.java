@@ -9,47 +9,48 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 /**
- * @ClassName: Category
+ * @ClassName: Views
  * @author: Ford.Zhang
  * @version: 1.0
- * 2019/12/18 下午 5:45
+ * 2019/12/19 上午 10:48
  **/
 @Getter
 @Setter
 @Entity
 @DynamicUpdate
-@Table(name = "category")
-public class Category extends BaseEntity {
-
+@Table(name = "views")
+public class Views extends BaseEntity {
     @Override
     public void setEntityId(SnowflakeIdWorker snowflakeIdWorker) {
-        if (StringUtils.isBlank(categoryId)) {
-            categoryId = String.valueOf(snowflakeIdWorker.nextId());
+        if (StringUtils.isBlank(viewId)) {
+            viewId = String.valueOf(snowflakeIdWorker.nextId());
         }
     }
 
     /**
-     * 文章分类主键
+     * 访问量主键
      */
     @Id
     @Column(name = "id", nullable = false,length = 32, updatable = false, unique = true)
-    private String categoryId;
+    private String viewId;
     /**
-     * 分类名称
+     * 计算日期
      */
-    @Column(name = "name")
-    private String name;
+    @Column(name = "count_date")
+    private Date countDate;
     /**
-     * 启用日期
+     * 访问量
      */
-    @Column(name = "active_date")
-    private Date activeDate;
+    @Column(name = "views")
+    private String views;
     /**
-     * 文章分类关系
+     * 访问与用户关系
      */
-    @OneToMany(mappedBy = "category")
-    private List<Article> articles;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk1_user_views"))
+    private User user;
+
+
 }

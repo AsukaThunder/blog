@@ -7,10 +7,8 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * @ClassName: Tags
@@ -18,9 +16,9 @@ import javax.persistence.Table;
  * @version: 1.0
  * 2019/12/18 下午 5:57
  **/
-@Entity
 @Getter
 @Setter
+@Entity
 @DynamicUpdate
 @Table(name = "tags")
 public class Tags extends BaseEntity {
@@ -42,4 +40,9 @@ public class Tags extends BaseEntity {
      */
     @Column(name = "name")
     private String name;
+    /**
+     * 文章标签
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tags", orphanRemoval = true)
+    private List<ArticleTags> articleTags;
 }

@@ -16,9 +16,9 @@ import java.util.List;
  * @version: 1.0
  * 2019/12/18 下午 6:00
  **/
-@Entity
 @Getter
 @Setter
+@Entity
 @DynamicUpdate
 @Table(name = "user")
 public class User extends BaseEntity {
@@ -38,7 +38,7 @@ public class User extends BaseEntity {
     /**
      * 用户账号
      */
-    @Column(name = "account_name", length = 255, nullable = false)
+    @Column(name = "account_name", nullable = false)
     private String userName;
     /**
      * 用户昵称
@@ -68,11 +68,21 @@ public class User extends BaseEntity {
     /**
      * 用户头像
      */
-    @Column(name = "user_face", length = 255)
+    @Column(name = "user_face")
     private String userFace;
     /**
      * 用户角色关系
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hospitalUser", orphanRemoval = true)
-    private List<Role> userRoles;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private List<UserRole> userRoles;
+    /**
+     * 用户评论关系
+     */
+    @OneToMany(mappedBy = "user")
+    private List<Comments> comments;
+    /**
+     * 用户文章关联
+     */
+    @OneToMany(mappedBy = "user")
+    private List<Article> articles;
 }
