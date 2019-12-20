@@ -1,6 +1,8 @@
 package com.ford.blog.entity;
 
 import com.ford.blog.entity.base.BaseEntity;
+import com.ford.blog.entity.role.RoleCode;
+import com.ford.blog.entity.role.UserRoleRef;
 import com.ford.blog.util.SnowflakeIdWorker;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +43,16 @@ public class User extends BaseEntity {
     @Column(name = "account_name", nullable = false)
     private String userName;
     /**
+     * 真实姓名
+     */
+    @Column(name = "real_name", length = 30)
+    private String realName;
+    /**
+     * 性别
+     */
+    @Column(name = "gender")
+    private Integer gender;
+    /**
      * 用户昵称
      */
     @Column(name = "nick_name")
@@ -74,7 +86,7 @@ public class User extends BaseEntity {
      * 用户角色关系
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-    private List<UserRole> userRoles;
+    private List<UserRoleRef> userRoleRefs;
     /**
      * 用户评论关系
      */
@@ -85,4 +97,36 @@ public class User extends BaseEntity {
      */
     @OneToMany(mappedBy = "user")
     private List<Article> articles;
+
+    public List<UserRoleRef> getUserRoleRef() {
+        return userRoleRefs;
+    }
+
+    public void setUserRoleRef(List<UserRoleRef> userRoleRef) {
+        this.userRoleRefs = userRoleRef;
+    }
+    /**
+     * 是否超级管理员
+     */
+    @Transient
+    public Boolean isRoot() {
+        return this.isCurrentRole(RoleCode.ROOT.name());
+    }
+
+    /**
+     * 是否管理员
+     */
+    @Transient
+    public Boolean isAdmin() {
+        return this.isCurrentRole(RoleCode.ADMIN.name());
+    }
+    private Boolean isCurrentRole(String roleCode) {
+        List<UserRoleRef> roleRefs = this.getUserRoleRef();
+        for (UserRoleRef ref : roleRefs) {
+            if (roleCode.equals(ref.getRole().getRoleCode())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

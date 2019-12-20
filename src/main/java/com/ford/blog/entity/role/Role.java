@@ -1,4 +1,4 @@
-package com.ford.blog.entity;
+package com.ford.blog.entity.role;
 
 import com.ford.blog.entity.base.BaseEntity;
 import com.ford.blog.util.SnowflakeIdWorker;
@@ -30,21 +30,46 @@ public class Role extends BaseEntity {
     }
 
     /**
-     * 角色主键
+     * 角色ID
      */
     @Id
-    @Column(name = "id", nullable = false,length = 32, updatable = false, unique = true)
+    @Column(name = "role_id", length = 32, updatable = false, unique = true)
     private String roleId;
+
+    /**
+     * 角色编码
+     */
+    @Column(name = "role_code", length = 32)
+    private String roleCode;
+
     /**
      * 角色名称
      */
-    @Column(name = "name")
-    private String name;
+    @Column(name = "role_name")
+    private String roleName;
+
+    /**
+     * 角色描述
+     */
+    @Column(name = "description")
+    private String description;
+
+    /**
+     * 是否启用
+     */
+    @Column(name = "enable", length = 1)
+    private Boolean enable;
+
+    /**
+     * 能否删除: 超级管理员
+     */
+    @Column(name = "can_delete", length = 1)
+    private Boolean canDelete;
     /**
      * 关联用户角色表
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "role", orphanRemoval = true)
-    private List<UserRole> userRoles;
+    private List<UserRoleRef> userRoleRefs;
 
 
 }

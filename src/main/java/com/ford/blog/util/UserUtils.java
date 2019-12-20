@@ -1,235 +1,78 @@
 package com.ford.blog.util;
 
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
+ * @ClassName: AuthenticationInterceptor
+ * @author: Ford.Zhang
+ * @version: 1.0
+ * 2019/12/19 下午 5:49
  * 用户工具类
  */
 public class UserUtils {
+    private static final String USER_KEY = "USER";
 
-    private final static String SESSION_NAME = "session_user";
+    private static ThreadLocal<Map<String, Object>> cache = new ThreadLocal<>();
 
+    public static String getUserId() {
+        Object userId = getCache(USER_KEY);
+        return userId == null ? null : userId.toString();
+    }
 
-    /**
-     * 用户类型
-     */
-    public enum UserType {
-        /**
-         * 游客
-         */
-        visitor,
-        /**
-         * 博主
-         */
-        blogger,
-        /**
-         * 平台管理员
-         */
-        admin,
-        /**
-         * 什么都不是
-         */
-        none
+    public static void setUserId(String userId) {
+        set(USER_KEY, userId);
     }
 
     /**
-     * 获取当前请求
+     * 从ThreadLocal里获取缓存的值
      *
-     * @return
+     * @param key 要获取的数据的KEY
+     * @return 要获取的值
      */
-    public static HttpServletRequest getRequest() {
-        if (RequestContextHolder.getRequestAttributes() == null) {
+    private static Object getCache(String key) {
+        Map<String, Object> map = cache.get();
+        if (isCacheIsNull()) {
             return null;
         }
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        return request;
+        return map.getOrDefault(key, null);
     }
 
     /**
-     * 获取session 中的user
+     * 向ThreadLocal缓存值
      *
-     * @return
+     * @param key   要缓存的KEY
+     * @param value 要缓存的VALUE
      */
-    public static Object getUser() {
-        HttpServletRequest request = getRequest();
-        if (request == null) {
-            return null;
+    private static void set(String key, Object value) {
+        if (!isCacheIsNull()) {
+            cache.get().put(key, value);
+        } else {
+            Map<String, Object> vmap = new HashMap<>();
+            vmap.put(key, value);
+            cache.set(vmap);
         }
-        HttpSession session = request.getSession();
-        if (session == null) {
-            return null;
-        }
-        Object user = session.getAttribute(SESSION_NAME);
-        return user;
     }
 
     /**
-     * 获取用户类型
+     * 根据KEY移除缓存里的数据
      *
-     * @param user
-     * @return
+     * @param key
      */
-//    public static UserType getUserType(Class<?> user) {
-//        if (user.equals(HospitalUser.class)) {
-//            return UserType.hospital;
-//        } else if (user.equals(SupplierEmployee.class)) {
-//            return UserType.supplier;
-//        } else if (user.equals(Admin.class)) {
-//            return UserType.admin;
-//        } else if (user.equals(HospitalExternalUser.class)) {
-//            return UserType.external;
-//        } else {
-//            return UserType.none;
-//        }
-//    }
-
-//    /**
-//     * 获取用户类型
-//     *
-//     * @return
-//     */
-//    public static UserType getUserType() {
-//        Object user = getUser();
-//        if (user == null) {
-//            return UserType.none;
-//        }
-//        if (user.getClass().equals(HospitalUser.class)) {
-//            return UserType.hospital;
-//        } else if (user.getClass().equals(SupplierEmployee.class)) {
-//            return UserType.supplier;
-//        } else if (user.getClass().equals(Admin.class)) {
-//            return UserType.admin;
-//        } else if (user.getClass().equals(HospitalExternalUser.class)) {
-//            return UserType.external;
-//        } else {
-//            return UserType.none;
-//        }
-//    }
-
-//    /**
-//     * 转换成医院员工
-//     *
-//     * @param user
-//     * @return
-//     */
-//    public static HospitalUser getHospitalUser(Object user) {
-//        HospitalUser hospitalUser = (HospitalUser) user;
-//        return hospitalUser;
-//    }
-//
-//    /**
-//     * 转换成服务商员工
-//     *
-//     * @param user
-//     * @return
-//     */
-//    public static SupplierEmployee getSupplierEmployee(Object user) {
-//        SupplierEmployee employee = (SupplierEmployee) user;
-//        return employee;
-//    }
-//
-//    public static HospitalExternalUser getHospitalExternalUser(Object user) {
-//        HospitalExternalUser hospitalExternalUser = (HospitalExternalUser) user;
-//        return hospitalExternalUser;
-//    }
-
-    /**
-     * 转换成平台管理员
-     *
-     * @param user
-     * @return
-     */
-//    public static Admin getAdmin(Object user) {
-//        Admin admin = (Admin) user;
-//        return admin;
-//    }
-
-    /**
-     * 获取用户ID
-     *
-     * @return
-     */
-//    public static String getUserId() {
-//        Object user = getUser();
-//        if (user == null) {
-//            return null;
-//        }
-//        UserType type = getUserType(user.getClass());
-//        if (UserType.hospital.equals(type)) {
-//            HospitalUser hospitalUser = getHospitalUser(user);
-//            return hospitalUser.getEmployeeId();
-//        } else if (UserType.supplier.equals(type)) {
-//            SupplierEmployee employee = getSupplierEmployee(user);
-//            return employee.getUserId();
-//        } else if (UserType.admin.equals(type)) {
-//            Admin admin = getAdmin(user);
-//            return admin.getAdminId();
-//        } else if (UserType.external.equals(type)) {
-//            HospitalExternalUser hospitalExternalUser = getHospitalExternalUser(user);
-//            return hospitalExternalUser.getUserId();
-//        } else {
-//            return null;
-//        }
-//    }
-
-    /**
-     * 是否是博主
-     *
-     * @param userType 用户类型
-     * @return boolean
-     */
-    public static boolean isBlogger(UserUtils.UserType userType) {
-        if (UserType.blogger.equals(userType)) {
-            return true;
+    private static void removeByKey(String key) {
+        if (!isCacheIsNull()) {
+            cache.get().remove(key);
         }
-        return false;
     }
 
     /**
-     * 是否是平台管理员
-     *
-     * @param userType
-     * @return
+     * 移除当前线程缓存
+     * 用于释放当前线程threadlocal资源
      */
-    public static boolean isAdmin(UserUtils.UserType userType) {
-        if (UserType.admin.equals(userType)) {
-            return true;
-        }
-        return false;
+    private static void remove() {
+        cache.remove();
     }
 
-
-//    /**
-//     * 检查前端传来是否是当前用户ID
-//     *
-//     * @param userId
-//     */
-//    public static void checkUserId(String userId) {
-//        if (StringUtils.isNotBlank(userId)) {
-//            Object user = getUser();
-//            UserType type = getUserType(user.getClass());
-//            if (UserType.hospital.equals(type)) {
-//                HospitalUser hospitalUser = getHospitalUser(user);
-//                if (!userId.equals(hospitalUser.getEmployeeId())) {
-//                    throw new ResourceNotFoundException(ErrorCode.UserNotFoundException);
-//                }
-//            } else if (UserType.supplier.equals(type)) {
-//                SupplierEmployee employee = getSupplierEmployee(user);
-//                if (!userId.equals(employee.getUserId())) {
-//                    throw new ResourceNotFoundException(ErrorCode.UserNotFoundException);
-//                }
-//            } else if (UserType.admin.equals(type)) {
-//                Admin admin = getAdmin(user);
-//                if (!userId.equals(admin.getAdminId())) {
-//                    throw new ResourceNotFoundException(ErrorCode.UserNotFoundException);
-//                }
-//            } else {
-//                throw new ResourceNotFoundException(ErrorCode.UserNotFoundException);
-//            }
-//        }
-//    }
-}
+    private static boolean isCacheIsNull() {
+        return cache.get() == null;
+    }}

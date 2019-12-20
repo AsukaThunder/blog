@@ -1,5 +1,6 @@
-package com.ford.blog.entity;
+package com.ford.blog.entity.role;
 
+import com.ford.blog.entity.User;
 import com.ford.blog.entity.base.BaseEntity;
 import com.ford.blog.util.SnowflakeIdWorker;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 
 /**
- * @ClassName: UserRole
+ * @ClassName: UserRoleRef
  * @author: Ford.Zhang
  * @version: 1.0
  * 2019/12/19 下午 2:01
@@ -20,7 +21,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user_role")
 @DynamicUpdate
-public class UserRole extends BaseEntity {
+public class UserRoleRef extends BaseEntity {
     @Override
     public void setEntityId(SnowflakeIdWorker snowflakeIdWorker) {
         if (StringUtils.isBlank(userRoleId)) {

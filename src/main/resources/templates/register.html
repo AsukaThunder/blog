@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+</head>
+<body>
+<br action="register" method="post">
+    用户名：<input type="text" name="username"/><span th:text="${tip1}"></span></br>
+    密码：<input type="password" name="password"></br>
+    确认密码：<input type="password" name="password2"><br>
+    <span th:text="${tip2}"></span></br>
+    <input type="submit" value="注册">
+
+</form>
+</body>
+</html>
