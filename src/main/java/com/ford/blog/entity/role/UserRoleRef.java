@@ -19,7 +19,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_role")
+@Table(name = "user_role_ref")
 @DynamicUpdate
 public class UserRoleRef extends BaseEntity {
     @Override
@@ -40,13 +40,13 @@ public class UserRoleRef extends BaseEntity {
      * 角色
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_role_user"))
+    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_role_user_k1"))
     private Role role;
 
     /**
      * 用户
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_role"))
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_role_k1"))
     private User user;
 }

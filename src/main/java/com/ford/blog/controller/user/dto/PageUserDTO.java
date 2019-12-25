@@ -57,7 +57,7 @@ public class PageUserDTO {
             dto.setUsername(user.getUserName());
             dto.setMobilePhone(user.getMobilePhone());
             dto.setRealName(user.getRealName());
-            dto.setIsUse(user.getEnabled());
+            dto.setIsUse(user.getIsUse());
             dto.setGender(user.getGender());
             dto.setEmail(user.getEmail());
             dto.setRoles(user.getUserRoleRef()

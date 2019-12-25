@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -27,7 +26,6 @@ import java.util.List;
  * 2019/12/19 下午 5:53
  **/
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -40,12 +38,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User queryByUsernameAndPassword(String username, String password) {
-        return userRepository.findByUsernameAndPasswordAndIsDeleteFalseAndIsUseTrue(username, password);
+        return userRepository.findByUserNameAndPasswordAndIsDeleteFalseAndIsUseTrue(username, password);
     }
 
     @Override
     public User queryByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUserName(username);
     }
 
     @Override
@@ -86,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean isUsernameDuplicate(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUserName(username);
         return null != user;
     }
 
@@ -106,7 +104,7 @@ public class UserServiceImpl implements UserService {
         dbUser.setRealName(inputUser.getRealName());
         dbUser.setEmail(inputUser.getEmail());
         dbUser.setGender(inputUser.getGender());
-        dbUser.setEnabled(inputUser.getEnabled());
+        dbUser.setIsUse(inputUser.getIsUse());
         dbUser.setMobilePhone(inputUser.getMobilePhone());
         dbUser.setUserName(inputUser.getUserName());
         // 处理用户角色关系
@@ -120,7 +118,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean isUsernameDuplicate(String username, String userId) {
-        User user = userRepository.findByUsernameAndUserIdNot(username, userId);
+        User user = userRepository.findByUserNameAndUserIdNot(username, userId);
         return null != user;
     }
 

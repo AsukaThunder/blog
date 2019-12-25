@@ -65,8 +65,8 @@ public class User extends BaseEntity {
     /**
      * 是否启用
      */
-    @Column(name = "enabled")
-    private Boolean enabled;
+    @Column(name = "isUse")
+    private Boolean isUse;
     /**
      * 邮箱
      */
@@ -86,7 +86,7 @@ public class User extends BaseEntity {
      * 用户角色关系
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-    private List<UserRoleRef> userRoleRefs;
+    private List<UserRoleRef> userRoleRef;
     /**
      * 用户评论关系
      */
@@ -99,11 +99,11 @@ public class User extends BaseEntity {
     private List<Article> articles;
 
     public List<UserRoleRef> getUserRoleRef() {
-        return userRoleRefs;
+        return userRoleRef;
     }
 
     public void setUserRoleRef(List<UserRoleRef> userRoleRef) {
-        this.userRoleRefs = userRoleRef;
+        this.userRoleRef = userRoleRef;
     }
     /**
      * 是否超级管理员

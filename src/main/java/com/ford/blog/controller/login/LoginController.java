@@ -2,7 +2,9 @@ package com.ford.blog.controller.login;
 
 import com.ford.blog.annotation.PublicInterface;
 import com.ford.blog.controller.OperationStatus;
+import com.ford.blog.controller.login.dto.DetailLoginDTO;
 import com.ford.blog.controller.login.dto.LoginDTO;
+import com.ford.blog.encrypt.util.CheckoutUtil;
 import com.ford.blog.entity.User;
 import com.ford.blog.entity.role.UserRoleRef;
 import com.ford.blog.exception.UnauthorizedException;
@@ -11,6 +13,7 @@ import com.ford.blog.util.ErrorCode;
 import com.ford.blog.util.JwtToken;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -43,41 +46,22 @@ public class LoginController {
         if (null == user) {
             throw new UnauthorizedException(ErrorCode.UserOrPasswordError);
         }
-
         // 判断当前用户是否有已弃用的角色
         List<UserRoleRef> refs = user.getUserRoleRef().stream().filter(ref -> ref.getRole().getEnable()).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(refs)) {
             throw new UnauthorizedException(ErrorCode.NoRoleEnable);
         }
-
-        String token = JwtToken.createToken(user.getUserId(), dto.getIsFromMobile());
+        String token = JwtToken.createToken(user.getUserId(), dto.getFromMobile());
         DetailLoginDTO result = new DetailLoginDTO().convertFrom(user);
         result.setToken(token);
-
-        //获取用户负责的医院信息
-        List<Hospital> hospitals = hospitalService.listUserHospital(user.getUserId());
-        List<SimpleHospitalDTO> simpleHospitalDTOS = hospitals.stream().map(hospital -> {
-            SimpleHospitalDTO simpleHospitalDTO = new SimpleHospitalDTO();
-            return simpleHospitalDTO.convertFrom(hospital);
-        }).collect(Collectors.toList());
-
-        //当用户拥有排查工程师、排查工程师组长角色时，必须分配责任医院
-        //手机端只允许排查工程师、排查工程师组长登陆
-        checkRefHospital(simpleHospitalDTOS, refs, dto.getIsFromMobile());
-
-        simpleHospitalDTOS = this.setDefaultHospital(simpleHospitalDTOS, refs);
-        result.setSimpleHospitals(simpleHospitalDTOS);
-        //允许拥有USER_UPDATE权限的人可以添加用户操作
-//        Boolean isAdmin = permissionService.isPermission(user, "USER_UPDATE");
-//        if (isAdmin){
-//            result.setIsAdmin(isAdmin);
-//        }
         return result;
     }
     /**
      * 注册功能
      */
-    @PostMapping("/register")
+    @PostMapping(value = "/register", produces = "application/json")
+    @ApiOperation(value = "注册")
+    @PublicInterface
     public ModelAndView register(@RequestParam("username") String username,
                                  @RequestParam("password") String password,
                                  @RequestParam("password2") String password2){
@@ -95,12 +79,12 @@ public class LoginController {
             return success;
         }
         //判断是否取到用户，如果没有就保存在数据库中
-        User user=userService.findByUsername(username);
+        User user=userService.queryByUsername(username);
         if(user == null){
             User registers=new User();
             registers.setUserName(username);
             registers.setPassword(password);
-            userService.register(registers);
+            userService.save(registers);
             success.setViewName("success");
         }
         else {

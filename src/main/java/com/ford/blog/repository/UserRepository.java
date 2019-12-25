@@ -14,13 +14,11 @@ import java.util.List;
  **/
 public interface UserRepository extends JpaRepository<User, String>, JpaSpecificationExecutor<User> {
 
-    User findByUsernameAndPasswordAndIsDeleteFalseAndIsUseTrue(String username, String password);
+    User findByUserNameAndPasswordAndIsDeleteFalseAndIsUseTrue(String username, String password);
 
-    User findByUsernameAndUserIdNot(String username, String userId);
+    User findByUserNameAndUserIdNot(String username, String userId);
 
-    User findByMobilePhone(String mobilePhone);
-
-    User findByUsername(String username);
+    User findByMobilePhone(String mobilePhone);;
 
     User findByMobilePhoneAndUserIdNot(String mobilePhone, String userId);
 

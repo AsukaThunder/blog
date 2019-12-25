@@ -52,7 +52,7 @@ public class DetailUserDTO {
     }
 
 
-    private static class DetailUserConverter extends Converter<DetailUserDTO, User> {
+    public static class DetailUserConverter extends Converter<DetailUserDTO, User> {
 
         @Override
         protected User doForward(DetailUserDTO dto) {
@@ -66,7 +66,7 @@ public class DetailUserDTO {
             dto.setUsername(user.getUserName());
             dto.setMobilePhone(user.getMobilePhone());
             dto.setRealName(user.getRealName());
-            dto.setIsUse(user.getEnabled());
+            dto.setIsUse(user.getIsUse());
             dto.setEmail(user.getEmail());
             dto.setGender(user.getGender());
             dto.setRoles(user.getUserRoleRef()

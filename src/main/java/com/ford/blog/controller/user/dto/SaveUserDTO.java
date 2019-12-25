@@ -71,7 +71,7 @@ public class SaveUserDTO {
             user.setUserName(dto.getUsername());
             user.setMobilePhone(dto.getMobilePhone());
             user.setRealName(dto.getRealName());
-            user.setEnabled(dto.getIsUse());
+            user.setIsUse(dto.getIsUse());
             user.setEmail(dto.getEmail());
             user.setGender(dto.getGender());
             user.setPassword(CheckoutUtil.md5(dto.getPassword()));

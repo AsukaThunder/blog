@@ -4,7 +4,6 @@ import com.ford.blog.controller.user.dto.*;
 import com.ford.blog.encrypt.anno.Encrypt;
 import com.ford.blog.encrypt.util.CheckoutUtil;
 import com.ford.blog.entity.User;
-import com.ford.blog.entity.role.UserRoleRef;
 import com.ford.blog.exception.InvalidRequestException;
 import com.ford.blog.exception.ResourceNotFoundException;
 import com.ford.blog.exception.UnprocessableEntityException;
@@ -13,8 +12,6 @@ import com.ford.blog.service.UserService;
 import com.ford.blog.util.ErrorCode;
 import com.ford.blog.util.UserUtils;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,11 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @ClassName: UserController
@@ -59,7 +51,7 @@ public class UserController {
                                         @RequestParam(value = "roleId", required = false) String roleId,
                                         @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                         @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
-        PageRequest pageRequest = PageRequest.of(page - 1, size, new Sort(Sort.Direction.DESC, "createTime"));
+        PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.Direction.DESC, "createTime");
         Page<User> users = userService.queryUsers(realName, username, roleId, pageRequest);
         return users.map(user -> {
             PageUserDTO result = new PageUserDTO().convertFrom(user);

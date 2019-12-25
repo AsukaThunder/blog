@@ -17,5 +17,5 @@ public class LoginDTO {
 
     private String password;
 
-    private boolean isFromMobile = false;
+    private Boolean fromMobile = false;
 }

@@ -3,6 +3,8 @@ package com.ford.blog.repository;
 import com.ford.blog.entity.role.UserRoleRef;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -17,5 +19,6 @@ public interface UserRoleRefRepository extends JpaRepository<UserRoleRef, String
     /**
      * 获取用户角色
      */
-    List<UserRoleRef> getByUserId(String userId);
+    @Query(nativeQuery = true,value = "select * from user_role_ref where user_id=:userId")
+    List<UserRoleRef> getByUserId(@Param("userId") String userId);
 }

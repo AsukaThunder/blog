@@ -61,7 +61,7 @@ public class UpdateUserDTO {
             user.setRealName(dto.getRealName());
             user.setUserName(dto.getUsername());
             user.setMobilePhone(dto.getMobilePhone());
-            user.setEnabled(dto.getIsUse());
+            user.setIsUse(dto.getIsUse());
             user.setEmail(dto.getEmail());
             user.setGender(dto.getGender());
 

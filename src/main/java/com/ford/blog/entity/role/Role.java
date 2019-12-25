@@ -66,6 +66,11 @@ public class Role extends BaseEntity {
     @Column(name = "can_delete", length = 1)
     private Boolean canDelete;
     /**
+     * 角色权限表
+     */
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RolePermissionRef> rolePermissionRef;
+    /**
      * 关联用户角色表
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "role", orphanRemoval = true)
